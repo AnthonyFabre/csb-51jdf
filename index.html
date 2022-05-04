@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Un premier jeu Phaser 3.5</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.50.0/dist/phaser.js"></script>
+    <style type="text/css">
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      class menu extends Phaser.Scene {
+        constructor() {
+          super({ key: "menu" });
+        }
+        //on charge les images
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonPlay", "assets/jouer.png");
+          this.load.image("imagecommentjouer", "assets/commentjouer.png");
+          this.load.image("imageBoutonEntrainement", "assets/entrainer.png");
+          this.load.image("imageLogo", "assets/logo2.png");
+          this.load.audio(
+            "taverne",
+            "assets/yt5s.com-Tavern Medieval Ballad - Legend [Full Acoustic Guitar Tab by Ebunny] Fingerstyle How to Play-(128kbps).ogg"
+          );
+        }
+
+        create() {
+          // on place les éléments de fond
+          this.add
+            .image(0, 0, "menu_fond")
+            .setOrigin(0)
+            .setDepth(0)
+            .setScale(1.5);
+
+          //on ajoute un bouton de clic, nommé bouton_play
+          var bouton_play = this.add
+            .image(400, 260, "imageBoutonPlay")
+            .setScale(0.6); //j'en est besoin pour test le jeu le mets pas en commentaire
+
+          var bouton_comment = this.add
+            .image(400, 370, "imagecommentjouer")
+            .setScale(0.6);
+
+          var bouton_logo = this.add.image(400, 100, "imageLogo").setScale(1);
+
+          var bouton_entrainement = this.add
+            .image(400, 480, "imageBoutonEntrainement")
+            .setScale(0.6);
+
+          if (cpt_musique_menu == true) {
+            musique_menu = this.sound.add("taverne");
+            musique_menu.loop = true;
+            musique_menu.play();
+            musique_menu.volume = 0.1;
+            cpt_musique_menu = false;
+          }
+
+          //=========================================================
+          //on rend le bouton interratif
+          bouton_play.setInteractive();
+          bouton_comment.setInteractive();
+          bouton_entrainement.setInteractive();
+
+          //Cas ou la souris passe sur le bouton play
+          bouton_comment.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_comment.on("pointerout", () => {
+            //...
+          });
+
+          //Cas ou la souris passe sur le bouton play
+          bouton_play.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_play.on("pointerout", () => {
+            //...
+          });
+
+          bouton_entrainement.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_entrainement.on("pointerout", () => {
+            //...
+          });
+
+          //Cas ou la sourris clique sur le bouton play :
+          // on lance le niveau 1
+          bouton_play.on("pointerup", () => {
+            this.scene.start("mode");
+          });
+
+          //Cas ou la sourris clique sur le bouton comment :
+          // on lance le
+          bouton_comment.on("pointerup", () => {
+            this.scene.start("instruction");
+          });
+
+          bouton_entrainement.on("pointerup", () => {
+            this.scene.start("entrainement");
+          });
+        }
+      }
+      /////////////////////////////////////////////////////////////////
+      class mode extends Phaser.Scene {
+        constructor() {
+          super({ key: "mode" });
+        }
+        //on charge les images
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("Facile", "assets/Facile.png");
+          this.load.image("Normal", "assets/Normal.png");
+          this.load.image("Difficile", "assets/Dificile.png");
+          this.load.image("imageLogo", "assets/logo2.png");
+          this.load.audio(
+            "taverne",
+            "assets/yt5s.com-Tavern Medieval Ballad - Legend [Full Acoustic Guitar Tab by Ebunny] Fingerstyle How to Play-(128kbps).ogg"
+          );
+        }
+
+        create() {
+          // on place les éléments de fond
+          this.add
+            .image(0, 0, "menu_fond")
+            .setOrigin(0)
+            .setDepth(0)
+            .setScale(1.5);
+
+          //on ajoute un bouton de clic, nommé bouton_play
+          var bouton_Facile = this.add.image(400, 260, "Facile").setScale(0.6); //j'en est besoin pour test le jeu le mets pas en commentaire
+
+          var bouton_Normal = this.add.image(400, 370, "Normal").setScale(0.6);
+
+          var bouton_logo = this.add.image(400, 100, "imageLogo").setScale(1);
+
+          var bouton_Difficile = this.add
+            .image(400, 480, "Difficile")
+            .setScale(0.6);
+          //=========================================================
+          //on rend le bouton interratif
+          bouton_Facile.setInteractive();
+          bouton_Normal.setInteractive();
+          bouton_Difficile.setInteractive();
+
+          //Cas ou la sourris clique sur le bouton play :
+          // on lance le niveau 1
+          bouton_Facile.on("pointerup", () => {
+            viePlayer = 5;
+            this.scene.start("choix");
+          });
+
+          //Cas ou la sourris clique sur le bouton comment :
+          // on lance le
+          bouton_Normal.on("pointerup", () => {
+            viePlayer = 3;
+            this.scene.start("choix");
+          });
+
+          bouton_Difficile.on("pointerup", () => {
+            viePlayer = 1;
+            this.scene.start("choix");
+          });
+        }
+      }
+      /////////////////////////////////////////////////////////////////
+      class GameOver extends Phaser.Scene {
+        constructor() {
+          super({ key: "GameOver" });
+        }
+        //on charge les images
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonPlay", "assets/jouer.png");
+          this.load.image("gameover", "assets/gameover.png");
+          this.load.image("imageLogo", "assets/logo2.png");
+          this.load.image("imageAcceuil", "assets/acceuilb.png");
+          this.load.image("imageRecommance", "assets/recommencer.png");
+
+          this.load.audio(
+            "cofin",
+            "assets/X2Download.com-Coffin Dance Medieval-(128kbps).ogg"
+          );
+        }
+
+        create() {
+          // on place les éléments de fond
+          this.add
+            .image(0, 0, "menu_fond")
+            .setOrigin(0)
+            .setDepth(0)
+            .setScale(1.5);
+
+          //on ajoute un bouton de clic, nommé bouton_play
+
+          var gameover = this.add.image(400, 250, "gameover").setScale(1.5);
+
+          var bouton_logo = this.add.image(400, 100, "imageLogo").setScale(1);
+
+          var bouton_rejouer = this.add
+            .image(400, 400, "imageBoutonPlay")
+            .setScale(1);
+
+          musique_over = this.sound.add("cofin");
+          musique_over.loop = true;
+          musique_over.play();
+          musique_over.volume = 0.1;
+
+          bouton_rejouer.setInteractive();
+
+          bouton_rejouer.once("pointerup", (event) => {
+            musique_over.stop();
+            restart();
+            this.scene.start("menu");
+          });
+
+          //=========================================================
+          //on rend le bouton interratif
+          //Cas ou la souris ne passe plus sur le bouton play
+        }
+      }
+
+      class Victoire extends Phaser.Scene {
+        constructor() {
+          super({ key: "Victoire" });
+        }
+        //on charge les images
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonPlay", "assets/jouer.png");
+          this.load.image("victoire", "assets/victoire.png");
+          this.load.image("imageLogo", "assets/logo2.png");
+          this.load.audio(
+            "win",
+            "assets/X2Download.com-FFI - Victory-(128kbps).ogg"
+          );
+        }
+
+        create() {
+          // on place les éléments de fond
+          this.add
+            .image(0, 0, "menu_fond")
+            .setOrigin(0)
+            .setDepth(0)
+            .setScale(1.5);
+
+          //on ajoute un bouton de clic, nommé bouton_play
+
+          var gameover = this.add.image(400, 250, "victoire").setScale(1.5);
+
+          var bouton_logo = this.add.image(400, 100, "imageLogo").setScale(1);
+
+          var bouton_rejouer = this.add
+            .image(400, 400, "imageBoutonPlay")
+            .setScale(1);
+
+          musique_win = this.sound.add("win");
+          musique_win.loop = true;
+          musique_win.play();
+          musique_win.volume = 0.1;
+
+          bouton_rejouer.setInteractive();
+
+          bouton_rejouer.once("pointerup", (event) => {
+            this.scene.restart("niveau1");
+            this.scene.restart("niveau2");
+            restart();
+            this.scene.start("menu");
+          });
+        }
+      }
+      ///////////////////////////////////////
+
+      class choix extends Phaser.Scene {
+        constructor() {
+          super({ key: "choix" });
+        }
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonniveau1", "assets/niveau1.png");
+          this.load.image("imageBoutonboss", "assets/boss.png");
+          this.load.image("imageBoutonretour", "assets/retour.png");
+          this.load.image("imagelogo", "assets/logo2.png");
+        }
+
+        create() {
+          this.add
+            .image(0, 0, "menu_fond")
+            .setOrigin(0)
+            .setDepth(0)
+            .setScale(1.5);
+
+          var bouton_logo = this.add.image(400, 100, "imageLogo").setScale(1);
+
+          //on ajoute un bouton de clic, nommé bouton_play
+          var bouton_1 = this.add
+            .image(400, 250, "imageBoutonniveau1")
+            .setScale(0.6);
+
+          var bouton_boss = this.add
+            .image(400, 370, "imageBoutonboss")
+            .setScale(0.6);
+
+          var bouton_retour = this.add
+            .image(400, 490, "imageBoutonretour")
+            .setScale(0.6);
+
+          //=========================================================
+          //on rend le bouton interratif
+          bouton_1.setInteractive();
+          bouton_boss.setInteractive();
+          bouton_retour.setInteractive();
+
+          //Cas ou la souris passe sur le bouton play
+          bouton_1.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_1.on("pointerout", () => {
+            //...
+          });
+
+          //Cas ou la souris passe sur le bouton play
+          bouton_boss.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_boss.on("pointerout", () => {
+            //...
+          });
+
+          bouton_retour.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_retour.on("pointerout", () => {
+            //...
+          });
+
+          //Cas ou la sourris clique sur le bouton play :
+          // on lance le niveau 1
+          bouton_1.on("pointerup", () => {
+            musique_menu.stop();
+            this.scene.start("niveau1");
+          });
+
+          //Cas ou la sourris clique sur le bouton comment :
+          // on lance le
+          bouton_boss.on("pointerup", () => {
+            musique_menu.stop();
+            this.scene.start("niveau2");
+          });
+
+          bouton_retour.on("pointerup", () => {
+            this.scene.start("menu");
+          });
+        }
+      }
+
+      /////////////////////////////////////////////////////
+
+      class instruction extends Phaser.Scene {
+        constructor() {
+          super({ key: "instruction" });
+        }
+
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonPlay", "assets/jouer.png");
+          this.load.image("imageBoutonEntrainement", "assets/entrainer.png");
+          this.load.image("imagePancarte", "assets/pancarte.png");
+          this.load.image("imageBoutonretour", "assets/retour.png");
+        }
+
+        create() {
+          this.add
+            .image(0, 0, "menu_fond")
+            .setOrigin(0)
+            .setDepth(0)
+            .setScale(1.5);
+
+          var bouton_play = this.add
+            .image(650, 75, "imageBoutonPlay")
+            .setScale(0.6);
+
+          var bouton_entrainement = this.add
+            .image(400, 75, "imageBoutonEntrainement")
+            .setScale(0.6);
+
+          var bouton_retour = this.add
+            .image(150, 75, "imageBoutonretour")
+            .setScale(0.6);
+
+          var pancarte = this.add
+            .image(400, 500, "imagePancarte")
+            .setScale(1.5);
+
+          //=========================================================
+          //on rend le bouton interratif
+          bouton_play.setInteractive();
+          bouton_entrainement.setInteractive();
+          bouton_retour.setInteractive();
+
+          //Cas ou la souris passe sur le bouton play
+          bouton_play.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_play.on("pointerout", () => {
+            //...
+          });
+
+          bouton_entrainement.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_entrainement.on("pointerout", () => {
+            //...
+          });
+
+          bouton_retour.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_retour.on("pointerout", () => {
+            //...
+          });
+
+          //Cas ou la sourris clique sur le bouton play :
+          // on lance le niveau 1
+          bouton_play.on("pointerup", () => {
+            this.scene.start("mode");
+          });
+
+          //Cas ou la sourris clique sur le bouton comment :
+          // on lance le
+          bouton_retour.on("pointerup", () => {
+            this.scene.start("menu");
+          });
+
+          bouton_entrainement.on("pointerup", () => {
+            this.scene.start("entrainement");
+          });
+        }
+
+        update() {}
+      }
+
+      //////////////////////ENTRAINEMENT///////////////////////////////////
+
+      class entrainement extends Phaser.Scene {
+        constructor() {
+          super({ key: "entrainement" });
+        }
+
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonPlay", "assets/jouer.png");
+          this.load.image("imageBoutonretour", "assets/retour.png");
+          this.load.image("sky", "assets/sky.png");
+          this.load.image("ground", "assets/platform.png");
+          this.load.image("phaser_plateforme", "assets/plateforme.png");
+          this.load.image("phaser_cloud1", "assets/cloud1.png");
+          this.load.image("phaser_sky2", "assets/sky2.png");
+          this.load.image("bullet", "assets/sword2.png");
+          this.load.image("glace", "assets/glace.png");
+          this.load.image("glace2", "assets/glace2.png");
+
+          this.load.tilemapTiledJSON("carte2", "assets/mapentrain.json");
+          this.load.spritesheet("player_roulade", "assets/roulade.png", {
+            frameWidth: 21,
+            frameHeight: 25
+          });
+          this.load.spritesheet("fumme_dash", "assets/fummée_dash.png", {
+            frameWidth: 192,
+            frameHeight: 175
+          });
+          this.load.spritesheet("player", "assets/Player_Idle_Run.png", {
+            frameWidth: 21,
+            frameHeight: 25
+          });
+        }
+
+        create() {
+          const map = this.add.tilemap("carte2");
+          // chargement des jeux de tuiles
+          const ts1 = map.addTilesetImage("cloud1", "phaser_cloud1");
+          const ts2 = map.addTilesetImage("sky2", "phaser_sky2");
+          const ts3 = map.addTilesetImage("plateforme", "phaser_plateforme");
+
+          // chargement des calques
+          const calque1 = map.createLayer("sky", [ts1, ts2, ts3]);
+
+          const calque2 = map.createLayer("sky2", [ts1, ts2, ts3]);
+
+          const calque3 = map.createLayer("eau", [ts1, ts2, ts3]);
+
+          const calque4 = map.createLayer("plateform", [ts1, ts2, ts3]);
+
+          const calque5 = map.createLayer("deco", [ts1, ts2, ts3]);
+
+          const calque6 = map.createLayer("deco2", [ts1, ts2, ts3]);
+
+          calque4.setCollisionByProperty({ estSolide: true });
+          calque5.setCollisionByProperty({ estSolide: true });
+          calque3.setCollisionByProperty({ estSolide: true });
+          groupeBullets = this.physics.add.group();
+          groupeBullets_enemi = this.physics.add.group();
+          cursors = this.input.keyboard.createCursorKeys();
+          boutonDash = this.input.keyboard.addKey("A");
+          boutonEpee = this.input.keyboard.addKey("Z");
+
+          player = this.physics.add.sprite(100, 500, "player").setScale(1.5);
+          player.setCollideWorldBounds(true);
+          var bouton_play = this.add
+            .image(130, 130, "imageBoutonPlay")
+            .setScale(0.5);
+
+          var bouton_retour = this.add
+            .image(130, 50, "imageBoutonretour")
+            .setScale(0.5);
+
+          //=========================================================
+          //on rend le bouton interratif
+          bouton_play.setInteractive();
+          bouton_retour.setInteractive();
+
+          //Cas ou la souris passe sur le bouton play
+          bouton_play.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_play.on("pointerout", () => {
+            //...
+          });
+
+          bouton_retour.on("pointerover", () => {
+            //....
+          });
+
+          //Cas ou la souris ne passe plus sur le bouton play
+          bouton_retour.on("pointerout", () => {
+            //...
+          });
+
+          //Cas ou la sourris clique sur le bouton play :
+          // on lance le niveau 1
+          bouton_play.on("pointerup", () => {
+            this.scene.start("mode");
+          });
+
+          //Cas ou la sourris clique sur le bouton comment :
+          // on lance le
+          bouton_retour.on("pointerup", () => {
+            this.scene.start("menu");
+          });
+          cursors = this.input.keyboard.createCursorKeys();
+          this.anims.create({
+            key: "left",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 3,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "right",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 3,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "turn",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 0,
+              end: 2
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "roulade",
+            frames: this.anims.generateFrameNumbers("player_roulade", {
+              start: 0,
+              end: 6
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "fumme_dash1",
+            frames: this.anims.generateFrameNumbers("fumme_dash", {
+              start: 0,
+              end: 6
+            }),
+            frameRate: 10
+          });
+
+          this.physics.add.collider(player, calque4);
+          this.physics.add.collider(player, calque5);
+          this.physics.add.collider(player, calque3);
+
+          player.direction = "right";
+
+          groupeBullets = this.physics.add.group();
+
+          this.physics.world.on("worldbounds", function (body) {
+            // on récupère l'objet surveillé
+            var objet = body.gameObject;
+            // s'il s'agit d'une balle
+            if (groupeBullets.contains(objet)) {
+              // on le détruit
+              objet.destroy();
+            }
+            if (groupeBullets_enemi.contains(objet)) {
+              // on le détruit
+              objet.destroy();
+            }
+          });
+        }
+
+        update(time, delta) {
+          if (cursors.left.isDown) {
+            player.direction = "left";
+            player.setVelocityX(-160);
+            player.anims.play("left", true);
+            player.flipX = true;
+          } else if (cursors.right.isDown) {
+            player.direction = "right";
+            player.setVelocityX(160);
+            player.anims.play("right", true);
+            player.flipX = false;
+          } else {
+            player.setVelocityX(0);
+            player.anims.play("turn");
+          }
+          if (cursors.up.isDown && player.body.blocked.down) {
+            player.setVelocityY(-350);
+          }
+          if (Phaser.Input.Keyboard.JustDown(boutonDash) && timeDash <= time) {
+            timeDash = time + 1000;
+            timeDash2 = time + 300;
+            timeAtt = time + 300;
+            dash_true = true;
+            dir = player.direction;
+            invinsibilite = true;
+            fumme = this.physics.add
+              .sprite(player.x, player.y + 15, "fumme_dash")
+              .setScale(0.5);
+            fumme.body.allowGravity = false;
+            fumme.anims.play("fumme_dash1", true);
+          }
+          if (dash_true == true && timeDash2 >= time) {
+            player.anims.play("roulade", true);
+            dash(player, dir);
+          } else if (timeDash2 < time && dash_true == true) {
+            dash_true = false;
+            player.setVelocityX(0);
+            invinsibilite = false;
+          }
+
+          if (Phaser.Input.Keyboard.JustDown(boutonEpee) && timeAtt <= time) {
+            tirer(player);
+            timeAtt = time + 500;
+          }
+        }
+      }
+
+      ///////////////////////////////////////////
+
+      class niveau1 extends Phaser.Scene {
+        constructor() {
+          super({ key: "niveau1" });
+        }
+
+        preload() {
+          this.load.image("sky", "assets/sky.png");
+          this.load.image("ground", "assets/platform.png");
+          this.load.image("phaser_plateforme", "assets/plateforme.png");
+          this.load.image("phaser_castle", "assets/castle.png");
+          this.load.image("phaser_cloud1", "assets/cloud1.png");
+          this.load.image("phaser_cloud2", "assets/cloud2.png");
+          this.load.image("phaser_sky2", "assets/sky2.png");
+          this.load.image("star", "assets/star.png");
+          this.load.image("bomb", "assets/bomb.png");
+          this.load.image("bullet", "assets/sword2.png");
+          this.load.image("glace", "assets/glace.png");
+          this.load.image("glace2", "assets/glace2.png");
+          this.load.image("glace3", "assets/glace3.png");
+          this.load.image("door", "assets/porte.png");
+
+          this.load.tilemapTiledJSON("carte", "assets/map2.json");
+          this.load.spritesheet("monstre", "assets/monstre(1).png", {
+            frameWidth: 124,
+            frameHeight: 113
+          });
+          this.load.spritesheet("monstre2", "assets/monstre2.png", {
+            frameWidth: 124,
+            frameHeight: 113
+          });
+          this.load.spritesheet("dude", "assets/dude.png", {
+            frameWidth: 32,
+            frameHeight: 48
+          });
+          this.load.spritesheet("player_roulade", "assets/roulade.png", {
+            frameWidth: 21,
+            frameHeight: 25
+          });
+          /*this.load.spritesheet("player", "assets/Knight.png", {
+          frameWidth: 80,
+          frameHeight: 64
+        });*/
+          this.load.spritesheet("player", "assets/Player_Idle_Run.png", {
+            frameWidth: 21,
+            frameHeight: 25
+          });
+          this.load.spritesheet("player2", "assets/PlayerAttackD.png", {
+            frameWidth: 39,
+            frameHeight: 25
+          });
+          this.load.spritesheet("ghost", "assets/ghost.png", {
+            frameWidth: 36,
+            frameHeight: 36
+          });
+          this.load.spritesheet("fumme_dash", "assets/fummée_dash.png", {
+            frameWidth: 192,
+            frameHeight: 175
+          });
+          this.load.audio("background", "assets/music.ogg");
+          this.load.audio(
+            "Boss_fight",
+            "assets/yt5s.com-Ice Boss Fight theme-(128kbps).ogg"
+          );
+        }
+
+        create() {
+          //this.cameras.main.width = 600;
+          //this.cameras.main.height = 500;
+          /*this.add.image(400, 300, "sky");
+        this.platforms = this.physics.add.staticGroup();
+        this.platforms.create(50, 250, "ground");
+        this.platforms.create(600, 400, "ground");
+        this.platforms.create(750, 220, "ground");
+        this.platforms.create(400, 568, "ground").setScale(2).refreshBody();*/
+          // chargement de la carte du niveau
+          // this.physics.world.setbounds(0, 0, 3200, 640);
+          const map = this.add.tilemap("carte");
+          // chargement des jeux de tuiles
+          const ts1 = map.addTilesetImage("cloud1", "phaser_cloud1");
+          const ts2 = map.addTilesetImage("cloud2", "phaser_cloud2");
+          const ts3 = map.addTilesetImage("sky2", "phaser_sky2");
+          const ts4 = map.addTilesetImage("castle", "phaser_castle");
+          const ts5 = map.addTilesetImage("plateforme", "phaser_plateforme");
+          // chargement des calques
+          const calque1 = map.createLayer("calque_background_1", [
+            ts1,
+            ts2,
+            ts3,
+            ts4,
+            ts5
+          ]);
+
+          const calque2 = map.createLayer("calque_background_2", [
+            ts1,
+            ts2,
+            ts3,
+            ts4,
+            ts5
+          ]);
+
+          const calque3 = map.createLayer("calque_eau", [
+            ts1,
+            ts2,
+            ts3,
+            ts4,
+            ts5
+          ]);
+
+          const calque9 = map.createLayer("calque_vrai_eau", [
+            ts1,
+            ts2,
+            ts3,
+            ts4,
+            ts5
+          ]);
+          const calque4 = map.createLayer("calque_plateforme", [
+            ts1,
+            ts2,
+            ts3,
+            ts4,
+            ts5
+          ]);
+
+          const calque5 = map.createLayer("calque_plateforme_2", [
+            ts1,
+            ts2,
+            ts3,
+            ts4,
+            ts5
+          ]);
+          const calque7 = map.createLayer("calque_decoration_2", [ts5]);
+
+          const calque8 = map.createLayer("calque_decoration_3", [ts5]);
+
+          const calque6 = map.createLayer("calque_decoration", [ts5]);
+
+          calque4.setCollisionByProperty({ estSolide: true });
+          calque5.setCollisionByProperty({ estSolide: true });
+          calque3.setCollisionByProperty({ estSolide: true });
+          calque9.setCollisionByProperty({ estSolide: true });
+
+          porte = this.add.sprite(2520, 440, "door").setScale(0.8);
+          player = this.physics.add.sprite(200, 500, "player").setScale(1.5);
+          player.setCollideWorldBounds(true);
+          this.enemi2 = this.physics.add.existing(
+            new Enemi(100, 100, "ghost", 0.2, this, 2500, calque4, calque5)
+          );
+
+          this.enemi3 = this.physics.add
+            .existing(
+              new Enemi2(
+                600,
+                400,
+                530,
+                650,
+                "monstre",
+                0.2,
+                this,
+                5000,
+                calque4,
+                calque5
+              )
+            )
+            .setScale(0.8);
+
+          this.enemi4 = this.physics.add
+            .existing(
+              new Enemi3(
+                1120,
+                320,
+                1037.7499999999973,
+                1197.7500000000018,
+                "monstre",
+                0.2,
+                this,
+                5000,
+                calque4,
+                calque5
+              )
+            )
+            .setScale(0.8);
+
+          this.enemi5 = this.physics.add
+            .existing(
+              new Enemi2(
+                1800,
+                100,
+                1600,
+                1914,
+                "monstre",
+                0.2,
+                this,
+                5000,
+                calque4,
+                calque5
+              )
+            )
+            .setScale(0.8);
+
+          cursors = this.input.keyboard.createCursorKeys();
+          this.anims.create({
+            key: "left",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 3,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "right",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 3,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "turn",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 0,
+              end: 2
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "roulade",
+            frames: this.anims.generateFrameNumbers("player_roulade", {
+              start: 0,
+              end: 6
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "fumme_dash1",
+            frames: this.anims.generateFrameNumbers("fumme_dash", {
+              start: 0,
+              end: 6
+            }),
+            frameRate: 10
+          });
+          // création du clavier - code déja présent sur le jeu de départ
+          cursors = this.input.keyboard.createCursorKeys();
+
+          // affectation de la touche A à boutonFeu
+          boutonAtt = this.input.keyboard.addKey("F");
+          boutonDash = this.input.keyboard.addKey("A");
+
+          /*stars.children.iterate(function (child) {
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+          });*/
+          // redimentionnement du monde avec les dimensions calculées via tiled
+          this.physics.world.setBounds(0, 0, 2560, 640);
+          //  ajout du champs de la caméra de taille identique à celle du monde
+          this.cameras.main.setBounds(0, 0, 2560, 640);
+          // ancrage de la caméra sur le joueur
+          this.cameras.main.startFollow(player);
+          this.physics.add.collider(player, calque4);
+          this.physics.add.collider(player, calque5);
+          this.physics.add.collider(player, calque3);
+          this.physics.add.collider(player, calque9);
+
+          groupeBullets = this.physics.add.group();
+          groupeBullets_enemi = this.physics.add.group();
+          // creation d'un attribut direction pour le joueur, initialisée avec 'right'
+          player.direction = "right";
+          musique_de_fond = this.sound.add("background");
+          musique_de_fond.loop = true;
+          musique_de_fond.play();
+          musique_de_fond.volume = 0.1;
+
+          // création du clavier - code déja présent sur le jeu de départ
+          cursors = this.input.keyboard.createCursorKeys();
+
+          boutonEpee = this.input.keyboard.addKey("Z");
+          bouton_coord = this.input.keyboard.addKey("M");
+          groupeBullets = this.physics.add.group();
+          this.physics.add.overlap(groupeBullets, this.enemi3, hit, null, this);
+          this.physics.add.overlap(
+            groupeBullets,
+            this.enemi4,
+            hit3,
+            null,
+            this
+          );
+          this.physics.add.overlap(
+            groupeBullets,
+            this.enemi2,
+            hit2,
+            null,
+            this
+          );
+          this.physics.add.overlap(
+            groupeBullets,
+            this.enemi5,
+            hit5,
+            null,
+            this
+          );
+          this.physics.add.overlap(
+            player,
+            groupeBullets_enemi,
+            hitPlayer,
+            null,
+            this
+          );
+
+          //this.physics.add.overlap(groupeBullets, monstre, hit, null, this);
+
+          this.physics.world.on("worldbounds", function (body) {
+            // on récupère l'objet surveillé
+            var objet = body.gameObject;
+            // s'il s'agit d'une balle
+            if (groupeBullets.contains(objet)) {
+              // on le détruit
+              objet.destroy();
+            }
+            if (groupeBullets_enemi.contains(objet)) {
+              // on le détruit
+              objet.destroy();
+            }
+          });
+        }
+
+        /////////////////////////FIN CREATE/////////////////:
+
+        update(time, delta) {
+          if (cursors.left.isDown) {
+            player.direction = "left";
+            player.setVelocityX(-160);
+            player.anims.play("left", true);
+            player.flipX = true;
+          } else if (cursors.right.isDown) {
+            player.direction = "right";
+            player.setVelocityX(160);
+            player.anims.play("right", true);
+            player.flipX = false;
+          } else {
+            player.setVelocityX(0);
+            player.anims.play("turn");
+          }
+          if (cursors.up.isDown && player.body.blocked.down) {
+            player.setVelocityY(-370);
+          }
+          if (Phaser.Input.Keyboard.JustDown(boutonDash) && timeDash <= time) {
+            timeDash = time + 1000;
+            timeDash2 = time + 300;
+            timeAtt = time + 300;
+            dash_true = true;
+            dir = player.direction;
+            invinsibilite = true;
+            fumme = this.physics.add
+              .sprite(player.x, player.y + 15, "fumme_dash")
+              .setScale(0.5);
+            fumme.body.allowGravity = false;
+            fumme.anims.play("fumme_dash1", true);
+          }
+          if (dash_true == true && timeDash2 >= time) {
+            player.anims.play("roulade", true);
+            dash(player, dir);
+          } else if (timeDash2 < time && dash_true == true) {
+            dash_true = false;
+            player.setVelocityX(0);
+            invinsibilite = false;
+          }
+          if (Phaser.Input.Keyboard.JustDown(boutonAtt)) {
+            //player.anims.play("attaque");
+          }
+          if (gameOver) {
+            gameOver = false;
+            musique_de_fond.stop();
+            this.scene.start("GameOver");
+            return;
+          }
+          if (enemi2_ex == true) {
+            this.enemi2.deplacementEnemi(player);
+            // visivle = false rend invisible
+          }
+          if (enemi3_ex == true) {
+            this.enemi3.deplacementEnemi(player);
+          }
+          if (enemi4_ex == true) {
+            this.enemi4.deplacementEnemi(player, time);
+          }
+          if (enemi5_ex == true) {
+            this.enemi5.deplacementEnemi(player);
+          }
+
+          if (Phaser.Input.Keyboard.JustDown(boutonEpee) && timeAtt <= time) {
+            tirer(player);
+            timeAtt = time + 500;
+          }
+          if (enemi2_ex == true) {
+            time_revive = time + 5000;
+          } else if (enemi2_ex == false && time_revive <= time) {
+            this.enemi2 = this.physics.add.existing(
+              new Enemi(100, 100, "ghost", 0.2, this, 2500)
+            );
+            enemi2_ex = true;
+            this.physics.add.overlap(
+              groupeBullets,
+              this.enemi2,
+              hit2,
+              null,
+              this
+            );
+          }
+          if (Phaser.Input.Keyboard.JustDown(bouton_coord)) {
+            console.log("coord y" + player.y);
+            console.log("coord x" + player.x);
+          }
+          if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+            if (checkOverlap(player, porte)) {
+              musique_de_fond.stop();
+              this.scene.start("niveau2");
+            }
+          }
+        }
+      }
+
+      class niveau2 extends Phaser.Scene {
+        constructor() {
+          super({ key: "niveau2" });
+        }
+        //on charge les images
+        preload() {
+          this.load.image("menu_fond", "assets/acceuil.png");
+          this.load.image("imageBoutonPlay", "assets/jouer.png");
+          this.load.image("imageBoutonretour", "assets/retour.png");
+          this.load.image("sky", "assets/sky.png");
+          this.load.image("ground", "assets/platform.png");
+          this.load.image("phaser_plateforme", "assets/plateforme.png");
+          this.load.image("phaser_cloud1", "assets/cloud1.png");
+          this.load.image("phaser_sky2", "assets/sky2.png");
+          this.load.image("bullet", "assets/sword2.png");
+          this.load.image("glace", "assets/glace.png");
+          this.load.image("glace2", "assets/glace2.png");
+          this.load.image("glace3", "assets/glace3.png");
+          this.load.image("dog", "assets/dog.png");
+          this.load.image("etoile", "assets/etoile de noel.png");
+
+          this.load.image("Phaser_tuilesdejeu", "assets/Dungeon.png");
+          this.load.tilemapTiledJSON("carte2", "assets/mapboss.json");
+          this.load.spritesheet("monstre2", "assets/monstre2.png", {
+            frameWidth: 124,
+            frameHeight: 113
+          });
+          this.load.spritesheet("player_roulade", "assets/roulade.png", {
+            frameWidth: 21,
+            frameHeight: 25
+          });
+          this.load.spritesheet("monstre3", "assets/monstre3.png", {
+            frameWidth: 120,
+            frameHeight: 115
+          });
+          this.load.spritesheet("fumme_dash", "assets/fummée_dash.png", {
+            frameWidth: 192,
+            frameHeight: 175
+          });
+          this.load.spritesheet("player", "assets/Player_Idle_Run.png", {
+            frameWidth: 21,
+            frameHeight: 25
+          });
+          this.load.spritesheet(
+            "passif",
+            "assets/projectile de glace passif.png",
+            {
+              frameWidth: 33,
+              frameHeight: 33
+            }
+          );
+          this.load.audio(
+            "Boss_fight",
+            "assets/yt5s.com-Ice Boss Fight theme-(128kbps).ogg"
+          );
+          this.load.audio("Roar1", "assets/Roar1.ogg");
+          this.load.audio("Roar2", "assets/Roar2.ogg");
+          this.load.audio("Roar3", "assets/Roar3.ogg");
+          this.load.audio("Roar4", "assets/Roar4.ogg");
+        }
+
+        create() {
+          const carteDuNiveau = this.add.tilemap("carte2");
+          const tileset = carteDuNiveau.addTilesetImage(
+            "Dungeon",
+            "Phaser_tuilesdejeu"
+          );
+
+          const backgroundLayer = carteDuNiveau.createLayer(
+            "background",
+            tileset
+          );
+
+          const plateform = carteDuNiveau.createLayer("plateform", tileset);
+
+          const deco = carteDuNiveau.createLayer("deco", tileset);
+
+          const deco2 = carteDuNiveau.createLayer("deco2", tileset);
+
+          plateform.setCollisionByProperty({ estSolide: true });
+
+          groupeBullets = this.physics.add.group();
+          groupeBullets_enemi = this.physics.add.group();
+          groupeBullets_enemi2 = this.physics.add.group();
+
+          player = this.physics.add.sprite(100, 500, "player").setScale(1.5);
+          player.setCollideWorldBounds(true);
+          this.physics.add.collider(player, plateform);
+          this.boss = this.physics.add
+            .existing(
+              new Boss(700, 450, "monstre3", this, plateform, plateform)
+            )
+            .setScale(2);
+          cursors = this.input.keyboard.createCursorKeys();
+          this.anims.create({
+            key: "left",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 3,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "right",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 3,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "turn",
+            frames: this.anims.generateFrameNumbers("player", {
+              start: 0,
+              end: 2
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "roulade",
+            frames: this.anims.generateFrameNumbers("player_roulade", {
+              start: 0,
+              end: 6
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "att_passif",
+            frames: this.anims.generateFrameNumbers("passif", {
+              start: 12,
+              end: 17
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "idle_passif",
+            frames: this.anims.generateFrameNumbers("passif", {
+              start: 6,
+              end: 11
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "spawn_passif",
+            frames: this.anims.generateFrameNumbers("passif", {
+              start: 0,
+              end: 4
+            }),
+            frameRate: 10
+          });
+          this.anims.create({
+            key: "fumme_dash1",
+            frames: this.anims.generateFrameNumbers("fumme_dash", {
+              start: 0,
+              end: 6
+            }),
+            frameRate: 10
+          });
+
+          cursors = this.input.keyboard.createCursorKeys();
+
+          // affectation de la touche A à boutonFeu
+          boutonEpee = this.input.keyboard.addKey("Z");
+          boutonDash = this.input.keyboard.addKey("A");
+          this.physics.add.overlap(
+            groupeBullets,
+            this.boss,
+            hitBoss,
+            null,
+            this
+          );
+          this.physics.add.overlap(
+            player,
+            groupeBullets_enemi,
+            hitPlayer,
+            null,
+            this
+          );
+          /* this.physics.add.overlap(
+            groupeBullets_enemi,
+            groupeBullets_enemi2,
+            BulletDestroy,
+            null,
+            this
+          );*/
+
+          //this.physics.add.overlap(groupeBullets, monstre, hit, null, this);
+
+          this.physics.world.on("worldbounds", function (body) {
+            // on récupère l'objet surveillé
+            var objet = body.gameObject;
+            // s'il s'agit d'une balle
+            if (groupeBullets.contains(objet)) {
+              // on le détruit
+              objet.destroy();
+            }
+            if (groupeBullets_enemi.contains(objet)) {
+              // on le détruit
+              objet.destroy();
+            }
+          });
+
+          musique_boss = this.sound.add("Boss_fight");
+          musique_boss.loop = true;
+          musique_boss.play();
+          musique_boss.volume = 0.1;
+        }
+
+        update(time, delta) {
+          if (cursors.left.isDown) {
+            player.direction = "left";
+            player.setVelocityX(-160);
+            player.anims.play("left", true);
+            player.flipX = true;
+          } else if (cursors.right.isDown) {
+            player.direction = "right";
+            player.setVelocityX(160);
+            player.anims.play("right", true);
+            player.flipX = false;
+          } else {
+            player.setVelocityX(0);
+            player.anims.play("turn");
+          }
+          if (cursors.up.isDown && player.body.blocked.down) {
+            player.setVelocityY(-350);
+          }
+          if (Phaser.Input.Keyboard.JustDown(boutonDash) && timeDash <= time) {
+            timeDash = time + 1000;
+            timeDash2 = time + 300;
+            timeAtt = time + 300;
+            dash_true = true;
+            dir = player.direction;
+            invinsibilite = true;
+            fumme = this.physics.add
+              .sprite(player.x, player.y + 15, "fumme_dash")
+              .setScale(0.5);
+            fumme.body.allowGravity = false;
+            fumme.anims.play("fumme_dash1", true);
+          }
+          if (dash_true == true && timeDash2 >= time) {
+            player.anims.play("roulade", true);
+            dash(player, dir);
+          } else if (timeDash2 < time && dash_true == true) {
+            dash_true = false;
+            player.setVelocityX(0);
+            invinsibilite = false;
+          }
+          if (gameOver) {
+            gameOver = false;
+            musique_boss.stop();
+            this.scene.start("GameOver");
+            return;
+          }
+          if (Phaser.Input.Keyboard.JustDown(boutonEpee) && timeAtt <= time) {
+            tirer(player);
+            timeAtt = time + 500;
+          }
+
+          if (boss_ex == true) {
+            if (vieBoss <= 600 && cpt_phase2 == 1) {
+              this.boss.setTint(0x770000);
+              cpt_phase2 = 0;
+            }
+            if (boss_hit == true) {
+              if (boss_hit_cpt == true) {
+                timer = 200 + time;
+                boss_hit_cpt = false;
+              }
+              if (vieBoss > 600 && timer <= time) {
+                this.boss.clearTint();
+                boss_hit = false;
+              } else if (vieBoss <= 600 && timer <= time) {
+                this.boss.setTint(0x770000);
+                boss_hit = false;
+              }
+            }
+            if (type_attaque == false) {
+              type_att = entierAleatoire(1, 4);
+              if (type_att == type_att2) {
+                type_att = entierAleatoire(1, 4);
+              } else {
+                type_att2 = type_att;
+                type_attaque = true;
+              }
+            }
+            this.boss.deplacementEnemi(player, time, type_attaque, type_att);
+          } else if (boss_ex == false && cpt_dog == 0) {
+            doggo = this.add.image(750, 570, "dog");
+            cpt_dog = 1;
+          }
+          if (cpt_dog == 1) {
+            if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+              if (checkOverlap(player, doggo)) {
+                musique_boss.stop();
+                this.scene.start("Victoire");
+              }
+            }
+          }
+        }
+      }
+
+      //---------------------------------FIN UPDATE--------------------
+
+      function tirer(player) {
+        var coefDir;
+        if (player.direction == "left") {
+          coefDir = -1;
+        } else {
+          coefDir = 1;
+        }
+        // on crée la balle a coté du joueur
+        var bullet = groupeBullets.create(
+          player.x + 25 * coefDir,
+          player.y - 1,
+          "bullet"
+        );
+        // parametres physiques de la balle.
+        bullet.setCollideWorldBounds(true);
+        bullet.body.onWorldBounds = true;
+        bullet.body.allowGravity = false;
+        if (coefDir == -1) {
+          bullet.flipX = true;
+        } else {
+          bullet.flipX = false;
+        }
+        bullet.setVelocity(500 * coefDir, 0); // vitesse en x et en y
+      }
+
+      function checkOverlap(spriteA, spriteB) {
+        var boundsA = spriteA.getBounds();
+        var boundsB = spriteB.getBounds();
+        var result = Phaser.Geom.Rectangle.Intersection(boundsA, boundsB);
+        return result.width != 0 || result.height != 0;
+      }
+
+      //----------------------------Toute les fonctions hit -----------------------------------------
+      function hit(monstre, bullet) {
+        bullet.destroy(); // destruction de la balle
+        //console.log(monstre);
+        vie3 = vie3 - 10;
+        if (vie3 <= 0) {
+          monstre.destroy(); // destruction de la cible.
+          enemi3_ex = false;
+        }
+      }
+
+      function hit2(monstre, bullet) {
+        bullet.destroy(); // destruction de la balle
+        //console.log(monstre);
+        vie2 = vie2 - 10;
+        if (vie2 <= 0) {
+          monstre.destroy(); // destruction de la cible.
+          enemi2_ex = false;
+        }
+      }
+
+      function hit3(monstre, bullet) {
+        bullet.destroy(); // destruction de la balle
+        //console.log(monstre);
+        vie4 = vie4 - 10;
+        if (vie4 <= 0) {
+          monstre.destroy(); // destruction de la cible.
+          enemi4_ex = false;
+        }
+      }
+
+      function hit5(monstre, bullet) {
+        bullet.destroy(); // destruction de la balle
+        //console.log(monstre);
+        vie5 = vie5 - 10;
+        if (vie5 <= 0) {
+          monstre.destroy(); // destruction de la cible.
+          enemi5_ex = false;
+        }
+      }
+
+      function hitBoss(monstre, bullet) {
+        bullet.destroy(); // destruction de la balle
+        //console.log(monstre);
+        vieBoss = vieBoss - 10;
+        monstre.setTint(0xff0000);
+        boss_hit = true;
+        boss_hit_cpt = true;
+        if (vieBoss <= 0) {
+          monstre.destroy(); // destruction de la cible.
+          boss_ex = false;
+        }
+      }
+
+      //----------------------------FIN FONCTION HIT-------------------------------
+      function hitPlayer(player, tir) {
+        if (invinsibilite == false) {
+          tir.destroy(true);
+          viePlayer = viePlayer - 1;
+          if (viePlayer <= 0) {
+            this.physics.pause();
+            player.setTint(0xff0000);
+            player.anims.play("turn");
+            gameOver = true;
+          }
+        }
+      }
+
+      function BulletDestroy(bullet1, bullet2) {
+        bullet1.destroy();
+        bullet2.destroy();
+      }
+
+      function dash(player, dir) {
+        if (dir == "left") {
+          player.setVelocityX(-300);
+          player.setVelocityY(0);
+          player.flipX = true;
+        } else {
+          player.setVelocityX(300);
+          player.setVelocityY(0);
+        }
+      }
+
+      function entierAleatoire(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      //--------------------------LES CLASSES---------------------------
+
+      class Enemi extends Phaser.Physics.Arcade.Sprite {
+        constructor(
+          cordX,
+          cordY,
+          sprite,
+          bounce,
+          scene,
+          Timesaut,
+          calque4,
+          calque5
+        ) {
+          super(scene, cordX, cordY, sprite);
+          this.cordX = cordX;
+          this.cordY = cordY;
+          this.sprite = sprite;
+          this.bounce = bounce;
+          this.Timesaut = Timesaut;
+          this.vie = 20;
+          this.scene.add.existing(this);
+          this.scene.physics.world.enable(this);
+          this.setCollideWorldBounds(true);
+          //this.scene.physics.add.collider(this, this.scene.platforms);
+          //this.scene.physics.add.collider(this, calque4);
+          //this.scene.physics.add.collider(this, calque5);
+
+          this.scene.physics.add.collider(
+            player,
+            this,
+            this.hitenemi,
+            null,
+            this
+          );
+          this.anims.create({
+            key: "ghost_left",
+            frames: this.anims.generateFrameNumbers("ghost", {
+              start: 8,
+              end: 13
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "ghost_right",
+            frames: this.anims.generateFrameNumbers("ghost", {
+              start: 8,
+              end: 13
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "idle",
+            frames: this.anims.generateFrameNumbers("ghost", {
+              start: 0,
+              end: 7
+            }),
+            frameRate: 10,
+            repeat: -1
+          });
+          this.anims.play("idle");
+        }
+        deplacementEnemi(player) {
+          var playerx = player.x;
+          var playery = player.y;
+          var enemix = this.x;
+          var enemiy = this.y;
+          if (enemix - playerx < 0) {
+            this.setVelocityX(80);
+            this.anims.play("ghost_right", true);
+            this.flipX = false;
+          } else if (enemix - playerx > 0) {
+            this.setVelocityX(-80);
+            this.anims.play("ghost_left", true);
+            this.flipX = true;
+          } else if (enemix - playerx == 0) {
+            this.setVelocityX(0);
+            this.anims.play("idle");
+          }
+          if (enemiy - playery > 0) {
+            this.setVelocityY(playery - enemiy);
+          } else if (enemiy - playery < 0) {
+            this.setVelocityY(playery - enemiy);
+          }
+        }
+
+        hitenemi(player) {
+          this.scene.physics.pause();
+          player.setTint(0xff0000);
+          player.anims.play("turn");
+          gameOver = true;
+        }
+        hit() {
+          enemi2_ex = false;
+          this.destroy();
+        }
+        sautEnemi() {
+          this.setVelocityY(-330);
+        }
+      }
+
+      class Enemi2 extends Phaser.Physics.Arcade.Sprite {
+        constructor(
+          cordX,
+          cordY,
+          limit1,
+          limit2,
+          sprite,
+          bounce,
+          scene,
+          Timesaut,
+          calque4,
+          calque5
+        ) {
+          super(scene, cordX, cordY, sprite);
+          this.cordX = cordX;
+          this.cordY = cordY;
+          this.sprite = sprite;
+          this.bounce = bounce;
+          this.Timesaut = Timesaut;
+          this.limit1 = limit1;
+          this.limit2 = limit2;
+          this.vie = 50;
+          this.scene.add.existing(this);
+          this.scene.physics.world.enable(this);
+          this.setCollideWorldBounds(true);
+          this.setVelocityX(80);
+          //this.scene.physics.add.collider(this, this.scene.platforms);
+          this.scene.physics.add.collider(this, calque4);
+          this.scene.physics.add.collider(this, calque5);
+          /*this.scene.physics.add.overlap(
+            this,
+            groupeBullets,
+            this.hit(),
+            null,
+            this
+          );*/
+
+          this.scene.physics.add.collider(
+            player,
+            this,
+            this.hitenemi,
+            null,
+            this
+          );
+          this.anims.create({
+            key: "monstre_right",
+            frames: this.anims.generateFrameNumbers("monstre", {
+              start: 0,
+              end: 4
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "monstre_left",
+            frames: this.anims.generateFrameNumbers("monstre", {
+              start: 9,
+              end: 5
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.play("monstre_right", true);
+        }
+        deplacementEnemi(player) {
+          var playerx = player.x;
+          var playery = player.y;
+          var enemix = this.x;
+          var enemiy = this.y;
+          //enemi3_ex = false;
+          //this.destroy();
+          if (enemix <= this.limit1) {
+            this.setVelocityX(50);
+            this.anims.play("monstre_right", true);
+          } else if (enemix >= this.limit2) {
+            this.setVelocityX(-50);
+            this.anims.play("monstre_left", true);
+          }
+          if (
+            enemix < this.limit2 &&
+            enemix > this.limit1 &&
+            playerx < this.limit2 + 50 &&
+            playerx > this.limit1 - 50 &&
+            playery > this.cordY - 200 &&
+            playery < this.cordY + 200
+          ) {
+            if (enemix - playerx < 0) {
+              this.setVelocityX(80);
+              this.anims.play("monstre_right", true);
+            } else if (enemix - playerx > 0) {
+              this.setVelocityX(-80);
+              this.anims.play("monstre_left", true);
+            }
+          }
+        }
+        hitenemi(player) {
+          this.scene.physics.pause();
+          player.setTint(0xff0000);
+          player.anims.play("turn");
+          gameOver = true;
+        }
+        sautEnemi() {
+          this.setVelocityY(-200);
+        }
+      }
+
+      class Enemi3 extends Phaser.Physics.Arcade.Sprite {
+        constructor(
+          cordX,
+          cordY,
+          limit1,
+          limit2,
+          sprite,
+          bounce,
+          scene,
+          calque4,
+          calque5
+        ) {
+          super(scene, cordX, cordY, sprite);
+          this.cordX = cordX;
+          this.cordY = cordY;
+          this.sprite = sprite;
+          this.bounce = bounce;
+          this.limit1 = limit1;
+          this.limit2 = limit2;
+          this.vie = 50;
+          this.time = 2000;
+          this.timer = 5000;
+          this.sens = false;
+          this.scene.add.existing(this);
+          this.scene.physics.world.enable(this);
+          this.setCollideWorldBounds(true);
+          this.setVelocityX(80);
+          //this.scene.physics.add.collider(this, this.scene.platforms);
+          this.scene.physics.add.collider(this, calque4);
+          this.scene.physics.add.collider(this, calque5);
+          /*this.scene.physics.add.overlap(
+            this,
+            groupeBullets,
+            this.hit(),
+            null,
+            this
+          );*/
+
+          this.scene.physics.add.collider(
+            player,
+            this,
+            this.hitenemi,
+            null,
+            this
+          );
+          this.anims.create({
+            key: "monstre_right",
+            frames: this.anims.generateFrameNumbers("monstre2", {
+              start: 0,
+              end: 4
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "monstre_left",
+            frames: this.anims.generateFrameNumbers("monstre2", {
+              start: 9,
+              end: 5
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "monstre_att",
+            frames: this.anims.generateFrameNumbers("monstre2", {
+              start: 10,
+              end: 14
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.play("monstre_right", true);
+        }
+        deplacementEnemi(player, time) {
+          var playerx = player.x;
+          var playery = player.y;
+          var enemix = this.x;
+          var enemiy = this.y;
+          //enemi3_ex = false;
+          //this.destroy();
+          if (enemix <= this.limit1) {
+            this.setVelocityX(50);
+            this.sens = false;
+            this.flipX = false;
+            this.anims.play("monstre_right", true);
+          } else if (enemix >= this.limit2) {
+            this.setVelocityX(-50);
+            this.sens = true;
+            this.flipX = false;
+            this.anims.play("monstre_left", true);
+          }
+          if (
+            enemix < this.limit2 &&
+            enemix > this.limit1 &&
+            playerx < this.limit2 + 300 &&
+            playerx > this.limit1 - 300 &&
+            playery > this.cordY - 400 &&
+            playery < this.cordY + 400 &&
+            this.timer <= time
+          ) {
+            /*
+            if (enemix - playerx < 0) {
+              this.setVelocityX(80);
+              this.anims.play("monstre_right", true);
+            } else if (enemix - playerx > 0) {
+              this.setVelocityX(-80);
+              this.anims.play("monstre_left", true);
+            } */
+            if (this.timer + 1000 >= time) {
+              this.anims.play("monstre_att", true);
+              if (enemix - playerx < 0) {
+                this.flipX = false;
+              } else {
+                this.flipX = true;
+              }
+              this.setVelocityX(0);
+            } else {
+              this.flipX = false;
+              if ((this.sens = false)) {
+                this.setVelocityX(50);
+                this.anims.play("monstre_right", true);
+              } else {
+                this.setVelocityX(-50);
+                this.anims.play("monstre_left", true);
+              }
+
+              // tir enemi
+              var coefDir;
+              if (enemix - playerx < 0) {
+                coefDir = 1;
+              } else {
+                coefDir = -1;
+              }
+              // on crée la balle a coté du joueur
+              var bullet = groupeBullets_enemi
+                .create(this.x + 35 * coefDir, this.y - 1, "glace")
+                .setScale(0.35);
+              // parametres physiques de la balle.
+              bullet.setCollideWorldBounds(true);
+              bullet.body.onWorldBounds = true;
+              bullet.body.allowGravity = false;
+              if (coefDir == -1) {
+                bullet.flipX = true;
+              } else {
+                bullet.flipX = false;
+              }
+              bullet.setVelocity(playerx - enemix, playery - enemiy); // vitesse en x et en y
+              //fin tire enemi
+
+              this.timer = time + this.time + 2000;
+            }
+          }
+        }
+        hitenemi(player) {
+          this.scene.physics.pause();
+          player.setTint(0xff0000);
+          player.anims.play("turn");
+          gameOver = true;
+        }
+        sautEnemi() {
+          this.setVelocityY(-200);
+        }
+      }
+
+      class Boss extends Phaser.Physics.Arcade.Sprite {
+        constructor(cordX, cordY, sprite, scene, calque4, calque5) {
+          super(scene, cordX, cordY, sprite);
+          this.roar1 = this.scene.sound.add("Roar1");
+          this.roar1.volume = 0.1;
+          this.roar2 = this.scene.sound.add("Roar2");
+          this.roar2.volume = 0.1;
+          this.roar3 = this.scene.sound.add("Roar3");
+          this.roar3.volume = 0.1;
+          this.roar4 = this.scene.sound.add("Roar4");
+          this.roar4.volume = 0.1;
+          this.cordX = cordX;
+          this.cordY = cordY;
+          this.sprite = sprite;
+          this.time = 2000;
+          this.timer = 5000;
+          this.attque1 = [true, true, true, true, true, true];
+          this.attque2 = [true, true, true];
+          this.attque3 = [true, true, true];
+          this.bullet3 = [];
+          this.bullet3_2 = [];
+          this.attque3_2 = [true, true, true];
+          this.attque4 = [true, true, true, true, true, true];
+          this.attque4_2 = [true, true, true, true, true, true];
+          this.bullet4 = [];
+          this.bullet4_2 = [];
+          this.bullet_coord;
+          this.passif = [];
+          this.cptPassif = 0;
+          this.sens = false;
+          this.scene.add.existing(this);
+          this.scene.physics.world.enable(this);
+          this.setCollideWorldBounds(true);
+          //this.scene.physics.add.collider(this, this.scene.platforms);
+          this.scene.physics.add.collider(this, calque4);
+          this.scene.physics.add.collider(this, calque5);
+
+          this.scene.physics.add.collider(
+            player,
+            this,
+            this.hitenemi,
+            null,
+            this
+          );
+          this.anims.create({
+            key: "monstre_right",
+            frames: this.anims.generateFrameNumbers("monstre3", {
+              start: 0,
+              end: 4
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "monstre_left",
+            frames: this.anims.generateFrameNumbers("monstre3", {
+              start: 9,
+              end: 5
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "monstre_att",
+            frames: this.anims.generateFrameNumbers("monstre3", {
+              start: 6,
+              end: 10
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.create({
+            key: "monstre_turn",
+            frames: this.anims.generateFrameNumbers("monstre3", {
+              start: 0,
+              end: 1
+            }),
+            frameRate: 5,
+            repeat: -1
+          });
+          this.anims.play("monstre_turn", true);
+          this.flipX = true;
+        }
+        deplacementEnemi(player, time) {
+          var playerx = player.x;
+          var playery = player.y;
+          var enemix = this.x;
+          var enemiy = this.y;
+          this.flipX = true;
+          if (cpt_time == true) {
+            this.timer = time + 1000;
+            cpt_time = false;
+          }
+          var passif = entierAleatoire(0, 500);
+          var passif_x = entierAleatoire(50, 500);
+          var passif_y = entierAleatoire(50, 500);
+          var passif_time = entierAleatoire(300, 10000);
+          var passif_coordOK = false;
+          if (passif == 500) {
+            this.passif[this.cptPassif] = [];
+            this.passif[this.cptPassif][0] = time + passif_time;
+            while (passif_coordOK != true) {
+              if (passif_x <= playerx + 50 && passif_x >= playerx - 50) {
+                passif_x = entierAleatoire(50, 500);
+              } else if (passif_y <= playery + 50 && passif_y >= playery - 50) {
+                passif_y = entierAleatoire(50, 500);
+              } else {
+                passif_coordOK = true;
+              }
+            }
+            if (vieBoss > 600) {
+              this.passif[this.cptPassif][1] = groupeBullets_enemi
+                .create(passif_x, passif_y, "passif")
+                .setScale(2);
+
+              this.passif[this.cptPassif][1].setCircle(16);
+              this.passif[this.cptPassif][1].isCircle = true;
+            } else {
+              this.passif[this.cptPassif][1] = groupeBullets_enemi
+                .create(passif_x, passif_y, "passif")
+                .setScale(2.5);
+
+              this.passif[this.cptPassif][1].setCircle(16);
+              this.passif[this.cptPassif][1].isCircle = true;
+            }
+            this.passif[this.cptPassif][2] = true;
+            this.passif[this.cptPassif][3] = [passif_x, passif_y];
+            this.passif[this.cptPassif][4] = true;
+            this.passif[this.cptPassif][1].body.allowGravity = false;
+            this.passif[this.cptPassif][1].anims.play("spawn_passif");
+            this.cptPassif++;
+          }
+          for (var i = 0; i <= this.cptPassif - 1; i++) {
+            if (this.passif[i][4] == true) {
+              this.passif[i][1].anims.play("idle_passif");
+              this.passif[i][4] = false;
+            }
+            if (this.passif[i][2] == true) {
+              if (this.passif[i][0] <= time) {
+                if (this.passif[i][1].active == true) {
+                  this.passif[i][1].setVelocity(
+                    playerx - this.passif[i][3][0],
+                    playery - this.passif[i][3][1]
+                  );
+                  this.passif[i][1].anims.play("att_passif");
+                  this.passif[i][2] = false;
+                } else {
+                  this.passif[i][2] = false;
+                }
+              }
+            }
+          }
+          //enemi3_ex = false;
+          //this.destroy();
+          if (this.timer <= time) {
+            //-----------------------------Attaque 1---------------------------------
+
+            if (type_att == 1) {
+              if (this.timer + 6000 >= time) {
+                this.anims.play("monstre_att", true);
+                if (this.attque1[0] == true) {
+                  this.roar1.play();
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[0] = false;
+                } else if (
+                  this.attque1[1] == true &&
+                  this.timer + 1000 <= time
+                ) {
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[1] = false;
+                } else if (
+                  this.attque1[2] == true &&
+                  this.timer + 2000 <= time
+                ) {
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[2] = false;
+                } else if (
+                  this.attque1[3] == true &&
+                  this.timer + 3000 <= time
+                ) {
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[3] = false;
+                } else if (
+                  this.attque1[4] == true &&
+                  this.timer + 4000 <= time
+                ) {
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[4] = false;
+                } else if (
+                  this.attque1[5] == true &&
+                  this.timer + 5000 <= time
+                ) {
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[5] = false;
+                } else if (
+                  this.attque1[6] == true &&
+                  this.timer + 5900 <= time
+                ) {
+                  var bullet = groupeBullets_enemi
+                    .create(player.x, 100, "glace2")
+                    .setScale(2);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setVelocity(0, 500);
+                  this.attque1[6] = false;
+                }
+              } else {
+                this.attque1 = [true, true, true, true, true, true];
+                this.anims.play("monstre_turn", true);
+                if (vieBoss > 600) {
+                  this.timer = time + this.time + 3000;
+                } else {
+                  this.timer = time + this.time + 100;
+                }
+                return (type_attaque = false);
+              }
+            }
+            // ----------------------------------------Attaque 2------------------------------
+            else if (type_att == 2) {
+              if (this.timer + 3000 >= time) {
+                this.anims.play("monstre_att", true);
+                if (this.timer + 100 >= time) {
+                  this.roar4.play();
+                }
+                if (this.attque2[0] == true && this.timer + 1000 <= time) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  var bullet = groupeBullets_enemi
+                    .create(this.x + 35 * coefDir, this.y - 1, "glace")
+                    .setScale(0.4);
+                  // parametres physiques de la balle.
+                  bullet.setCollideWorldBounds(true);
+                  bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setCircle(60);
+                  bullet.isCircle = true;
+                  if (coefDir == -1) {
+                    bullet.flipX = true;
+                  } else {
+                    bullet.flipX = false;
+                  }
+                  bullet.setVelocity(playerx - enemix, playery - enemiy);
+                  this.attque2[0] = false;
+                } else if (
+                  this.attque2[1] == true &&
+                  this.timer + 2000 <= time
+                ) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  var bullet = groupeBullets_enemi
+                    .create(this.x + 35 * coefDir, this.y - 1, "glace")
+                    .setScale(0.4);
+                  // parametres physiques de la balle.
+                  bullet.setCollideWorldBounds(true);
+                  bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setCircle(60);
+                  bullet.isCircle = true;
+                  if (coefDir == -1) {
+                    bullet.flipX = true;
+                  } else {
+                    bullet.flipX = false;
+                  }
+                  bullet.setVelocity(playerx - enemix, playery - enemiy);
+                  this.attque2[1] = false;
+                } else if (
+                  this.attque2[2] == true &&
+                  this.timer + 2900 <= time
+                ) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  var bullet = groupeBullets_enemi
+                    .create(this.x + 35 * coefDir, this.y - 1, "glace")
+                    .setScale(0.4);
+                  // parametres physiques de la balle.
+                  bullet.setCollideWorldBounds(true);
+                  bullet.body.onWorldBounds = true;
+                  bullet.body.allowGravity = false;
+                  bullet.setCircle(60);
+                  bullet.isCircle = true;
+                  if (coefDir == -1) {
+                    bullet.flipX = true;
+                  } else {
+                    bullet.flipX = false;
+                  }
+                  bullet.setVelocity(playerx - enemix, playery - enemiy);
+                  this.attque2[2] = false;
+                }
+              } else {
+                this.anims.play("monstre_turn", true);
+                this.attque2 = [true, true, true];
+                if (vieBoss > 600) {
+                  this.timer = time + this.time + 3000;
+                } else {
+                  this.timer = time + this.time + 100;
+                }
+                return (type_attaque = false);
+              }
+              //-------------------------Attaque 3 -------------------------
+            } else if (type_att == 3) {
+              if (this.timer + 4500 >= time) {
+                this.anims.play("monstre_att", true);
+                if (this.timer + 100 >= time) {
+                  this.roar3.play();
+                }
+                if (this.attque3[0] == true && this.timer + 1000 <= time) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  this.bullet3[0] = groupeBullets_enemi
+                    .create(enemix, playery - 50, "glace3")
+                    .setScale(0.5);
+                  // parametres physiques de la balle.
+                  this.bullet_coord = [enemix, playery];
+                  //this.bullet3[0].setCollideWorldBounds(true);
+                  //this.bullet3[0].body.onWorldBounds = true;
+                  this.bullet3[0].body.allowGravity = false;
+                  if (coefDir == -1) {
+                    this.bullet3[0].flipX = true;
+                  } else {
+                    this.bullet3[0].flipX = false;
+                  }
+                  this.bullet3[0].setVelocity(0 * coefDir, 0);
+                  this.attque3[0] = false;
+                } else if (
+                  this.attque3_2[0] == true &&
+                  this.timer + 1500 <= time
+                ) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  this.bullet3[0].destroy();
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  this.bullet3_2[0] = groupeBullets_enemi
+                    .create(
+                      this.bullet_coord[0],
+                      this.bullet_coord[1] - 50,
+                      "glace3"
+                    )
+                    .setScale(3);
+                  // parametres physiques de la balle.
+                  //this.bullet3_2[0].setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  this.bullet3_2[0].body.allowGravity = false;
+                  if (coefDir == -1) {
+                    this.bullet3_2[0].flipX = true;
+                  } else {
+                    this.bullet3_2[0].flipX = false;
+                  }
+                  this.bullet3_2[0].setVelocity(900 * coefDir, 0);
+                  this.attque3_2[0] = false;
+                } else if (
+                  this.attque3[1] == true &&
+                  this.timer + 2000 <= time
+                ) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  this.bullet3[1] = groupeBullets_enemi
+                    .create(enemix, playery - 50, "glace3")
+                    .setScale(0.5);
+                  // parametres physiques de la balle.
+                  this.bullet_coord = [enemix, playery];
+                  //this.bullet3[1].setCollideWorldBounds(true);
+                  //this.bullet3[1].body.onWorldBounds = true;
+                  this.bullet3[1].body.allowGravity = false;
+                  if (coefDir == -1) {
+                    this.bullet3[1].flipX = true;
+                  } else {
+                    this.bullet3[0].flipX = false;
+                  }
+                  this.bullet3[1].setVelocity(0 * coefDir, 0);
+                  this.attque3[1] = false;
+                } else if (
+                  this.attque3_2[1] == true &&
+                  this.timer + 2500 <= time
+                ) {
+                  this.bullet3_2[0].destroy();
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  this.bullet3[1].destroy();
+                  // on crée la balle a coté du joueur
+                  this.bullet3_2[1] = groupeBullets_enemi
+                    .create(
+                      this.bullet_coord[0],
+                      this.bullet_coord[1] - 50,
+                      "glace3"
+                    )
+                    .setScale(3);
+                  // parametres physiques de la balle.
+                  //bullet.setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  this.bullet3_2[1].body.allowGravity = false;
+                  if (coefDir == -1) {
+                    this.bullet3_2[1].flipX = true;
+                  } else {
+                    this.bullet3_2[1].flipX = false;
+                  }
+                  this.bullet3_2[1].setVelocity(900 * coefDir, 0);
+                  this.attque3_2[1] = false;
+                } else if (
+                  this.attque3[2] == true &&
+                  this.timer + 3000 <= time
+                ) {
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  // on crée la balle a coté du joueur
+                  this.bullet3[2] = groupeBullets_enemi
+                    .create(enemix, playery - 50, "glace3")
+                    .setScale(0.5);
+                  // parametres physiques de la balle.
+                  this.bullet_coord = [enemix, playery];
+                  //this.bullet3[2].setCollideWorldBounds(true);
+                  //this.bullet3[2].body.onWorldBounds = true;
+                  this.bullet3[2].body.allowGravity = false;
+                  if (coefDir == -1) {
+                    this.bullet3[2].flipX = true;
+                  } else {
+                    this.bullet3[2].flipX = false;
+                  }
+                  this.bullet3[2].setVelocity(0 * coefDir, 0);
+                  this.attque3[2] = false;
+                } else if (
+                  this.attque3_2[2] == true &&
+                  this.timer + 3500 <= time
+                ) {
+                  this.bullet3_2[1].destroy();
+                  this.flipX = true;
+                  this.setVelocityX(0);
+                  this.anims.play("monstre_turn", true);
+
+                  // tir enemi
+                  var coefDir;
+                  if (enemix - playerx < 0) {
+                    coefDir = 1;
+                  } else {
+                    coefDir = -1;
+                  }
+                  this.bullet3[2].destroy();
+                  // on crée la balle a coté du joueur
+                  this.bullet3_2[2] = groupeBullets_enemi
+                    .create(
+                      this.bullet_coord[0],
+                      this.bullet_coord[1] - 50,
+                      "glace3"
+                    )
+                    .setScale(3);
+                  // parametres physiques de la balle.
+                  //this.bullet3_2[2].setCollideWorldBounds(true);
+                  //bullet.body.onWorldBounds = true;
+                  this.bullet3_2[2].body.allowGravity = false;
+                  if (coefDir == -1) {
+                    this.bullet3_2[2].flipX = true;
+                  } else {
+                    this.bullet3_2[2].flipX = false;
+                  }
+                  this.bullet3_2[2].setVelocity(900 * coefDir, 0);
+                  this.attque3_2[2] = false;
+                } else if (this.timer + 4400 <= time) {
+                  this.bullet3_2[2].destroy();
+                  this.anims.play("monstre_turn", true);
+                  this.attque3 = [true, true, true];
+                  this.attque3_2 = [true, true, true];
+                  if (vieBoss > 600) {
+                    this.timer = time + this.time + 3000;
+                  } else {
+                    this.timer = time + this.time + 100;
+                  }
+                  return (type_attaque = false);
+                }
+              }
+            }
+            if (type_att == 4) {
+              if (this.timer + 7500 >= time) {
+                this.anims.play("monstre_att", true);
+                if (this.attque4[0] == true) {
+                  this.roar1.play();
+                  this.bullet4[0] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  this.bullet4[0].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[0] = false;
+                } else if (
+                  this.timer + 900 <= time &&
+                  this.attque4_2[0] == true
+                ) {
+                  this.bullet4_2[0] = groupeBullets_enemi
+                    .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                    .setScale(0.25);
+                  this.bullet4_2[0].body.allowGravity = false;
+                  this.bullet4[0].destroy();
+                  this.attque4_2[0] = false;
+                } else if (
+                  this.attque4[1] == true &&
+                  this.timer + 1000 <= time
+                ) {
+                  this.bullet4[1] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  // parametres physiques de la balle.
+                  this.bullet4[1].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[1] = false;
+                } else if (
+                  this.timer + 1900 <= time &&
+                  this.attque4_2[1] == true
+                ) {
+                  this.bullet4_2[1] = groupeBullets_enemi
+                    .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                    .setScale(0.25);
+                  this.bullet4_2[1].body.allowGravity = false;
+                  this.bullet4[1].destroy();
+                  this.attque4_2[1] = false;
+                } else if (
+                  this.attque4[2] == true &&
+                  this.timer + 2000 <= time
+                ) {
+                  this.bullet4[2] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  // parametres physiques de la balle.
+                  this.bullet4[2].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[2] = false;
+                } else if (
+                  this.timer + 2900 <= time &&
+                  this.attque4_2[2] == true
+                ) {
+                  this.bullet4_2[2] = groupeBullets_enemi
+                    .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                    .setScale(0.25);
+                  this.bullet4_2[2].body.allowGravity = false;
+                  this.bullet4[2].destroy();
+                  this.attque4_2[2] = false;
+                } else if (
+                  this.attque4[3] == true &&
+                  this.timer + 3000 <= time
+                ) {
+                  this.bullet4[3] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  // parametres physiques de la balle.
+                  this.bullet4[3].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[3] = false;
+                } else if (
+                  this.timer + 3900 <= time &&
+                  this.attque4_2[3] == true
+                ) {
+                  this.bullet4_2[3] = groupeBullets_enemi
+                    .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                    .setScale(0.25);
+                  this.bullet4_2[3].body.allowGravity = false;
+                  this.bullet4[3].destroy();
+                  this.attque4_2[3] = false;
+                } else if (
+                  this.attque4[4] == true &&
+                  this.timer + 4000 <= time
+                ) {
+                  this.bullet4[4] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  // parametres physiques de la balle.
+                  this.bullet4[4].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[4] = false;
+                } else if (
+                  this.timer + 4900 <= time &&
+                  this.attque4_2[4] == true
+                ) {
+                  this.bullet4_2[4] = groupeBullets_enemi
+                    .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                    .setScale(0.25);
+                  this.bullet4_2[4].body.allowGravity = false;
+                  this.bullet4[4].destroy();
+                  this.attque4_2[4] = false;
+                } else if (
+                  this.attque4[5] == true &&
+                  this.timer + 5000 <= time
+                ) {
+                  this.bullet4[5] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  // parametres physiques de la balle.
+                  this.bullet4[5].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[5] = false;
+                } else if (
+                  this.timer + 5900 <= time &&
+                  this.attque4_2[5] == true
+                ) {
+                  this.bullet4_2[5] = groupeBullets_enemi
+                    .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                    .setScale(0.25);
+                  this.bullet4_2[5].body.allowGravity = false;
+                  this.bullet4[5].destroy();
+                  this.attque4_2[5] = false;
+                } else if (
+                  this.attque4[6] == true &&
+                  this.timer + 5900 <= time
+                ) {
+                  this.bullet4[6] = groupeBullets_enemi2
+                    .create(player.x, player.y, "etoile")
+                    .setScale(0.25);
+                  // parametres physiques de la balle.
+                  this.bullet4[6].body.allowGravity = false;
+                  this.bullet_coord = [player.x, player.y];
+                  this.attque4[6] = false;
+                }
+              } else if (
+                this.timer + 6900 <= time &&
+                this.attque4_2[6] == true
+              ) {
+                this.bullet4_2[6] = groupeBullets_enemi
+                  .create(this.bullet_coord[0], this.bullet_coord[1], "glace")
+                  .setScale(0.25);
+                this.bullet4_2[6].body.allowGravity = false;
+                this.bullet4[6].destroy();
+                this.attque4_2[6] = false;
+              } else {
+                this.attque4 = [true, true, true, true, true, true];
+                this.attque4_2 = [true, true, true, true, true, true];
+                for (var i = 0; i < 6; i++) {
+                  this.bullet4_2[i].destroy();
+                }
+                this.anims.play("monstre_turn", true);
+                if (vieBoss > 600) {
+                  this.timer = time + this.time + 3000;
+                } else {
+                  this.timer = time + this.time + 100;
+                }
+                return (type_attaque = false);
+              }
+            }
+          }
+        }
+        hitenemi(player) {
+          this.scene.physics.pause();
+          player.setTint(0xff0000);
+          player.anims.play("turn");
+          gameOver = true;
+        }
+        time(time) {
+          this.timer = time;
+          cpt_time = false;
+        }
+      }
+
+      //---------------------------LES VARIABLES---------------------------
+      function restart() {
+        invinsibilite = false;
+        dir = "";
+        timeDash2 = "";
+        dash_true = false;
+        platforms = "";
+        player = "";
+        fumme = "";
+        enemi = "";
+        cursors = "";
+        stars = "";
+        score = 0;
+        scoreText = "";
+        bombs = "";
+        gameOver = false;
+        timedEvent = "";
+        time = 0;
+        timesaut = 5000;
+        boutonAtt = "";
+        timeAtt = 0;
+        groupeBullets = "";
+        groupeBullets_enemi = "";
+        groupeBullets_enemi2 = "";
+        boutonEpee = "";
+        timeDash = 0;
+        boutonDash = "";
+        musique_de_fond = "";
+        time_revive = "";
+        bouton_coord = "";
+        musique_over = "";
+        musique_win = "";
+        musique_menu = "";
+        porte = "";
+        cpt_musique_menu = true;
+
+        viePlayer = 5;
+
+        //vie des monstres
+        vie3 = 50;
+        vie2 = 10;
+        vie4 = 50;
+        vie5 = 50;
+
+        //existance des monstres
+        enemi2_ex = true;
+        enemi3_ex = true;
+        enemi4_ex = true;
+        enemi5_ex = true;
+
+        //POUR LE BOSS
+        attaque = false;
+        type_attaque = false;
+        type_att = "";
+        boss_hit_time = 200;
+        cpt_phase2 = 1;
+        timer = "";
+        boss_hit_cpt = false;
+        type_att2 = "";
+        boss_ex = true;
+        vieBoss = 1000;
+        boss_hit = false;
+        music_cpt = 0;
+        musique_boss = "";
+        cpt_dog = 0;
+        doggo = "";
+        cpt_time = true;
+        musique_de_fond = "";
+      }
+      config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+          default: "arcade",
+          arcade: {
+            gravity: { y: 320 },
+            debug: false
+          }
+        },
+        scene: [
+          menu,
+          niveau1,
+          choix,
+          instruction,
+          entrainement,
+          niveau2,
+          GameOver,
+          Victoire,
+          mode
+        ]
+      };
+      restart();
+
+      game = new Phaser.Game(config);
+      game.scene.start("menu");
+    </script>
+  </body>
+</html>
